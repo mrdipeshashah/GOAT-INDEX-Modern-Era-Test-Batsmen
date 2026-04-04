@@ -1,0 +1,59 @@
+import pandas as pd
+from google.colab import auth, drive
+import os
+
+# 1. AUTHENTICATE & MOUNT
+auth.authenticate_user()
+drive.mount('/content/drive', force_remount=True)
+
+# 2. CONFIGURATION
+PROJECT_ID = 'mrdipeshashah'
+DATASET_ID = 'cricket_analysis'
+FOLDER_PATH = '/content/drive/MyDrive/Cricket_Analysis/' 
+
+# Exact filenames from your "My Drive" screenshot
+keepers = {
+    'TopBat1.xlsx': 'standard_stats',
+    'TopBat4.xlsx': 'career_history',
+    'TopBat6.xlsx': 'weighted_performance',
+    'TopBat9.xlsx': 'impact_metrics'
+}
+
+print("🚀 Starting simpler upload...")
+
+for file_name, table_name in keepers.items():
+    full_path = os.path.join(FOLDER_PATH, file_name)
+    
+    if os.path.exists(full_path):
+        try:
+            print(f"🔄 Reading {file_name}...")
+            df = pd.read_excel(full_path)
+            
+            # Clean column names (No spaces, dots, or % allowed)
+            df.columns = [
+                str(c).replace(' ', '_')
+                     .replace('%', 'pct')
+                     .replace('.', '')
+                     .replace('-', '_')
+                     .strip() 
+                for c in df.columns
+            ]
+            
+            # The destination table
+            destination = f"{DATASET_ID}.{table_name}"
+            
+            # 3. DIRECT UPLOAD (No complex config imports needed)
+            df.to_gbq(
+                destination_table=destination,
+                project_id=PROJECT_ID,
+                if_exists='replace'
+            )
+            
+            print(f"✅ SUCCESS: {table_name} is live!")
+            
+        except Exception as e:
+            print(f"❌ ERROR with {file_name}: {e}")
+    else:
+        print(f"⚠️ NOT FOUND: {file_name} in {FOLDER_PATH}")
+
+print("\n🏆 PROCESS COMPLETE!")
