@@ -27,3 +27,5 @@ Peak Impact Points (10.0 pts): (IPV_Raw / Maximum IPV_Raw) * 10.0
 
 
 <img width="754" height="273" alt="image" src="https://github.com/user-attachments/assets/beeb715c-9273-4b8a-8728-eaf0fed94c29" />
+
+<img width="782" height="347" alt="image" src="https://github.com/user-attachments/assets/f86c42c4-4b45-4c0c-893f-4b1f170f2ab4" />
