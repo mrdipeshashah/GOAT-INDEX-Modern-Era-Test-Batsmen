@@ -1,0 +1,47 @@
+CREATE OR REPLACE TABLE `mrdipeshashah.cricket_analysis.ultimate_goat_leaderboard` AS
+WITH metrics AS (
+  -- 1. Gather all raw data from your different tables
+  SELECT 
+    f.Player, f.Country, f.Runs,
+    SAFE_CAST(f.Rating AS FLOAT64) as Rating,
+    i.Strike_Rate, i.Century_Frequency, 
+    SAFE_CAST(i.MOM_Awards AS FLOAT64) as MOM,
+    (w.Average_Relative_to_Team + w.Average_Relative_to_Opposition) as wba_raw,
+    c.Cons_Raw, c.Bow_Q_Raw, c.IPV_Raw
+  FROM `mrdipeshashah.cricket_analysis.full_career_history` f
+  LEFT JOIN `mrdipeshashah.cricket_analysis.impact_metrics` i ON f.Player = i.Player
+  LEFT JOIN `mrdipeshashah.cricket_analysis.weighted_performance` w ON f.Player = w.Player
+  -- Using the clean table you just uploaded from Colab
+  LEFT JOIN `mrdipeshashah.cricket_analysis.stg_consistency_clean` c ON f.Player = c.Player
+),
+max_values AS (
+  -- 2. Calculate the "Gold Standard" (Maximums) to normalize the scores
+  SELECT 
+    MAX(Runs) as m_runs, 
+    MAX(Rating) as m_rating,
+    MAX((Strike_Rate * 0.1) + (Century_Frequency * 5) + (MOM * 2)) as m_x,
+    MAX(wba_raw) as m_wba,
+    MAX(Cons_Raw + Bow_Q_Raw) as m_cons,
+    MAX(IPV_Raw) as m_ipv
+  FROM metrics
+)
+-- 3. The Final Scoring Engine
+SELECT 
+  r.Player, r.Country,
+  ROUND((r.Runs / m.m_runs) * 12.5, 2) as Career_Pts,
+  ROUND((r.Rating / m.m_rating) * 10.0, 2) as Rating_Pts,
+  ROUND((( (r.Strike_Rate * 0.1) + (r.Century_Frequency * 5) + (r.MOM * 2) ) / m.m_x) * 20.0, 2) as X_Factor_Pts,
+  ROUND((r.wba_raw / m.m_wba) * 32.5, 2) as WBA_Pts,
+  ROUND(((r.Cons_Raw + r.Bow_Q_Raw) / m.m_cons) * 15.0, 2) as Consistency_Pts,
+  ROUND((r.IPV_Raw / m.m_ipv) * 10.0, 2) as Peak_Impact_Pts,
+  -- Total Score out of 100
+  ROUND(
+    COALESCE((r.Runs / m.m_runs) * 12.5, 0) + 
+    COALESCE((r.Rating / m.m_rating) * 10.0, 0) + 
+    COALESCE((( (r.Strike_Rate * 0.1) + (r.Century_Frequency * 5) + (r.MOM * 2) ) / m.m_x) * 20.0, 0) + 
+    COALESCE((r.wba_raw / m.m_wba) * 32.5, 0) + 
+    COALESCE(((r.Cons_Raw + r.Bow_Q_Raw) / m.m_cons) * 15.0, 0) + 
+    COALESCE((r.IPV_Raw / m.m_ipv) * 10.0, 0)
+  , 2) as Final_GOAT_Score
+FROM metrics r, max_values m
+ORDER BY Final_GOAT_Score DESC;
