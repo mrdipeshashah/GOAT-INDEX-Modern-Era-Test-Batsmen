@@ -121,6 +121,7 @@ To see how this works in practice, here are three examples of how points are awa
 ### **Dynamic Benchmarking**
 The "Max Global Metric" is not a fixed number; it is dynamically identified by the SQL script from the current dataset. As active players like Joe Root or Virat Kohli increase their career totals or improve their averages, the benchmarks adjust, ensuring the **Final GOAT Score** is always a reflection of the total history of the game.
 
+<img width="768" height="429" alt="image" src="https://github.com/user-attachments/assets/c513fb1c-bf37-452a-a844-1cb06f12805f" />
 
 
 
