@@ -1,3 +1,13 @@
+Data Engineering Flow:
+
+Extraction: Raw historical cricket data harvested into Google Sheets.
+
+Transformation: Python/Pandas scripts in Google Colab used for cleaning, handling nulls, and initial feature engineering.
+
+Loading: Data pushed via the google-cloud-bigquery library into BigQuery for high-performance SQL analysis.
+
+Modeling: Final "Master" tables created in SQL using CTEs and normalization to feed Looker Studio.
+
 Data Dictionary
 
 Core Dimensions (The "Who & When")
