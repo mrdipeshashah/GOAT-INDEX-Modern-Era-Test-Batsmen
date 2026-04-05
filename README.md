@@ -1,60 +1,39 @@
-The 100-Point GOAT Index: Calculation Methodology
-To ensure a fair comparison across different eras and playing styles, every metric is normalized against the highest performer in that category. This scales all values to a 0–100% range before applying the weights.
+Data Dictionary
 
-1. Career Volume & Peak Rating (22.5 pts)
-Career Run Points (12.5 pts): (Player Runs / Maximum Runs) * 12.5
+Core Dimensions (The "Who & When")
+Player / Country: The primary identifiers for the athlete and their national team.
 
-Peak Rating Points (10.0 pts): (Peak ICC Rating / Maximum Rating) * 10.0
+Career: The total span of the player's active years (e.g., 1990-2006).
 
-2. X-Factor & Match-Winning Ability (20.0 pts)
-This rewards efficiency and game-changing performances.
+Career_Start / Career_End: Integer values extracted from the career span, used for timeline analysis and cohort grouping.
 
-X-Raw Formula: (Strike Rate * 0.1) + (Century Frequency * 5) + (MOM Awards * 2)
+Era: Categorical classification based on debut year (e.g., '90s', '10s') to compare players across different technological and pitch-condition epochs.
 
-Normalized Score: (Player X-Raw / Maximum X-Raw) * 20.0
+Longevity_Tier: A qualitative bucket (Short Peak to Iron Man) based on the total number of years active.
 
-3. Weighted Batting Averages - WBA (32.5 pts)
-This measures quality of runs based on the strength of the team and the opposition.
+Batting_Style: An "Intent Index" that categorizes players (Aggressor to Blocker) based on their career Strike Rate.
 
-WBA Raw: Average Relative to Team + Average Relative to Opposition
+Primary Metrics (The "Raw Data")
+Runs / Average / Rating: Traditional performance metrics including total volume, per-innings consistency, and normalized performance ratings.
 
-Normalized Score: (Player WBA Raw / Maximum WBA Raw) * 32.5
+Strike_Rate: Scoring speed; used to differentiate between anchors and accelerators.
 
-4. Consistency & Peak Impact (25.0 pts)
-Consistency Score (15.0 pts): ( (Cons_Raw + Bow_Q_Raw) / Maximum Combined Consistency ) * 15.0
+Century_Frequency: The number of innings played per century scored (lower is better).
 
-Peak Impact Points (10.0 pts): (IPV_Raw / Maximum IPV_Raw) * 10.0
+MOM (Man of the Match): Total count of match-winning individual performances.
 
+WinsR / WinsS: Win-specific metrics; Win-Run percentage (Runs in wins / Total runs) and Strike Rate during winning matches.
 
-<img width="754" height="273" alt="image" src="https://github.com/user-attachments/assets/beeb715c-9273-4b8a-8728-eaf0fed94c29" />
+Team_Runs: The total runs scored by the player's team during their career; used to calculate relative contribution.
 
-<img width="782" height="347" alt="image" src="https://github.com/user-attachments/assets/f86c42c4-4b45-4c0c-893f-4b1f170f2ab4" />
+Advanced Calculations (The "Analysis")
+wba_raw: Weighted Batting Average; a combined metric looking at a player's performance relative to both their teammates and their opposition.
 
-Here is a breakdown of each dimension with a concise, non-technical explanation:
+Cons_Raw: A consistency coefficient that penalizes high variance and rewards steady output.
 
-Dimension Definitions
-Career Run Pts: Rewards longevity and the total volume of work a player produced over their entire career.
+Bow_Q_Raw: A "Bowling Quality" factor that adjusts a player's score based on the strength of the bowling attacks faced in their specific era.
 
-Rating Pts: Measures absolute peak dominance by looking at the highest level of skill a player reached compared to the all-time record.
+IPV_Raw: Independent Player Value; a "Peak Impact" metric isolating a player's performance from team context during their best years.
 
-X-Factor Pts: Identifies "game-changers" by combining scoring speed, the frequency of big hundreds, and match-winning performances.
-
-WBA Pts (Weighted Average): Accounts for "Strength of Schedule" by comparing a player's average to the quality of their own team and the opposition they faced.
-
-Consistency Pts: Values reliability by rewarding players who performed steadily against top-tier bowling attacks rather than "stat-padding" against weak ones.
-
-Peak Impact Pts (IPV): Highlights the "clutch" factor by measuring how much a player's runs actually shifted the win probability in favor of their team.
-
-The 100-Point Formula: What we are actually measuring
-
-Longevity (Career Runs): Did they do it for a long time?
-
-Peak Skill (ICC Rating): How high was their ceiling?
-
-Efficiency (X-Factor): How fast and how often did they dominate?
-
-Context (WBA): How good were the teams they played for and against?
-
-Reliability (Consistency): Can you count on them against the best bowlers?
-
-Clutch (Peak Impact): Did their runs lead to victories?
+The Final Output
+Final_GOAT_Score: A composite, weighted index (0-100) that aggregates Longevity, Peak Impact, Consistency, and X-Factor. This is the primary sorting metric for the leaderboard.
