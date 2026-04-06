@@ -1,7 +1,6 @@
-CREATE OR REPLACE TABLE `mrdipeshashah.cricket_analysis.ultimate_goat_leaderboard` AS
 WITH metrics AS (
   SELECT 
-    TRIM(f.Player) as Player,
+    TRIM(f.Player) as Player, -- Clean names to ensure JOINs work
     f.Country, f.Career,
     SAFE_CAST(LEFT(TRIM(f.Career), 4) AS INT64) as start_int,
     SAFE_CAST(RIGHT(TRIM(f.Career), 4) AS INT64) as end_int,
@@ -17,14 +16,9 @@ WITH metrics AS (
     COALESCE(c.Bow_Q_Raw, 0) as Bow_Q_Raw, 
     COALESCE(c.IPV_Raw, 0) as IPV_Raw
   FROM `mrdipeshashah.cricket_analysis.full_career_history` f
-  
-  -- THE FUZZY JOIN FIX: Catches truncated names (Sangakkar -> Sangakkara)
-  LEFT JOIN `mrdipeshashah.cricket_analysis.impact_metrics` i 
-    ON f.Player LIKE CONCAT(i.Player, '%') OR i.Player LIKE CONCAT(f.Player, '%')
-  LEFT JOIN `mrdipeshashah.cricket_analysis.weighted_performance` w 
-    ON f.Player LIKE CONCAT(w.Player, '%') OR w.Player LIKE CONCAT(f.Player, '%')
-  LEFT JOIN `mrdipeshashah.cricket_analysis.stg_consistency_clean` c 
-    ON f.Player LIKE CONCAT(c.Player, '%') OR c.Player LIKE CONCAT(f.Player, '%')
+  LEFT JOIN `mrdipeshashah.cricket_analysis.impact_metrics` i ON TRIM(f.Player) = TRIM(i.Player)
+  LEFT JOIN `mrdipeshashah.cricket_analysis.weighted_performance` w ON TRIM(f.Player) = TRIM(w.Player)
+  LEFT JOIN `mrdipeshashah.cricket_analysis.stg_consistency_clean` c ON TRIM(f.Player) = TRIM(c.Player)
 ),
 max_values AS (
   SELECT 
@@ -39,7 +33,7 @@ max_values AS (
 SELECT 
   r.Player, r.Country, r.Career,
   
-  -- BACK TO TEXT: For the Looker Scatter Plot Label Fix
+  -- Clean Integer for Looker Scatter Plot X-Axis
   CAST(r.start_int AS INT64) as Career_Year_INT,
 
   PARSE_DATE('%Y', CAST(r.start_int AS STRING)) as Career_Start_Date,
@@ -94,27 +88,35 @@ SELECT
   END as Batting_Style,
   
   r.Runs, r.Average, r.Rating, r.Team_Runs,
-  r.Strike_Rate, r.Century_Frequency, r.MOM as MOM_Awards,
-  r.WinsR as Win_Run_Percentage, 
-  r.WinsS as Win_Strike_Rate,
+  r.Strike_Rate, r.Century_Frequency, r.MOM_Awards,
+  r.Win_Run_Percentage, 
+  r.Win_Strike_Rate,
 
-  -- POINTS BREAKDOWN
-  ROUND(COALESCE((r.Runs / NULLIF(m.m_runs,0)) * 12.5, 0), 2) as Pts_Career,
-  ROUND(COALESCE((r.Rating / NULLIF(m.m_rating,0)) * 10.0, 0), 2) as Pts_Rating,
-  ROUND(COALESCE((( (r.Strike_Rate * 0.1) + (r.Century_Frequency * 5) + (r.MOM * 2) ) / NULLIF(m.m_x, 0)) * 20.0, 0), 2) as Pts_XFactor,
-  ROUND(COALESCE((r.wba_raw / NULLIF(m.m_wba,0)) * 32.5, 0), 2) as Pts_WBA,
-  ROUND(COALESCE(((r.Cons_Raw + r.Bow_Q_Raw) / NULLIF(m.m_cons,0)) * 15.0, 0), 2) as Pts_Consistency,
-  ROUND(COALESCE((r.IPV_Raw / NULLIF(m.m_ipv,0)) * 10.0, 0), 2) as Pts_PeakImpact,
+  -- POINTS BREAKDOWN (Now safe from NULLs)
+  ROUND(COALESCE((r.Runs / m.m_runs) * 12.5, 0), 2) as Pts_Career,
+  ROUND(COALESCE((r.Rating / m.m_rating) * 10.0, 0), 2) as Pts_Rating,
+  ROUND(COALESCE((( (r.Strike_Rate * 0.1) + (r.Century_Frequency * 5) + (r.MOM_Awards * 2) ) / NULLIF(m.m_x, 0)) * 20.0, 0), 2) as Pts_XFactor,
+  ROUND(COALESCE((r.wba_raw / m.m_wba) * 32.5, 0), 2) as Pts_WBA,
+  ROUND(COALESCE(((r.Cons_Raw + r.Bow_Q_Raw) / m.m_cons) * 15.0, 0), 2) as Pts_Consistency,
+  ROUND(COALESCE((r.IPV_Raw / m.m_ipv) * 10.0, 0), 2) as Pts_PeakImpact,
 
   -- THE FINAL GOAT SCORE
   ROUND(
-    COALESCE((r.Runs / NULLIF(m.m_runs,0)) * 12.5, 0) + 
-    COALESCE((r.Rating / NULLIF(m.m_rating,0)) * 10.0, 0) + 
-    COALESCE((( (r.Strike_Rate * 0.1) + (r.Century_Frequency * 5) + (r.MOM * 2) ) / NULLIF(m.m_x, 0)) * 20.0, 0) + 
-    COALESCE((r.wba_raw / NULLIF(m.m_wba,0)) * 32.5, 0) + 
-    COALESCE(((r.Cons_Raw + r.Bow_Q_Raw) / NULLIF(m.m_cons,0)) * 15.0, 0) + 
-    COALESCE((r.IPV_Raw / NULLIF(m.m_ipv,0)) * 10.0, 0)
+    COALESCE((r.Runs / m.m_runs) * 12.5, 0) + 
+    COALESCE((r.Rating / m.m_rating) * 10.0, 0) + 
+    COALESCE((( (r.Strike_Rate * 0.1) + (r.Century_Frequency * 5) + (r.MOM_Awards * 2) ) / NULLIF(m.m_x, 0)) * 20.0, 0) + 
+    COALESCE((r.wba_raw / m.m_wba) * 32.5, 0) + 
+    COALESCE(((r.Cons_Raw + r.Bow_Q_Raw) / m.m_cons) * 15.0, 0) + 
+    COALESCE((r.IPV_Raw / m.m_ipv) * 10.0, 0)
   , 2) as Final_GOAT_Score
 
-FROM metrics r, max_values m
+FROM (
+  -- Subquery to pre-handle calculations for the main SELECT
+  SELECT *, 
+    (Strike_Rate * 0.1) + (Century_Frequency * 5) + (MOM * 2) as x_factor_raw,
+    MOM as MOM_Awards,
+    WinsR as Win_Run_Percentage,
+    WinsS as Win_Strike_Rate
+  FROM metrics
+) r, max_values m
 ORDER BY Final_GOAT_Score DESC;
