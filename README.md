@@ -121,6 +121,10 @@ To see how this works in practice, here are three examples of how points are awa
 ### **Dynamic Benchmarking**
 The "Max Global Metric" is not a fixed number; it is dynamically identified by the SQL script from the current dataset. As active players like Joe Root or Virat Kohli increase their career totals or improve their averages, the benchmarks adjust, ensuring the **Final GOAT Score** is always a reflection of the total history of the game.
 
+Since your GOAT score is a 100-point "Evaluation," I recommend using these "Fan-Friendly" labels for your charts and tables:1. Pts_WBA $\rightarrow$ "Opposition & Team Impact"Why: This is your heaviest metric (32.5 pts). It measures how much better a player was than the specific bowlers they faced and how much they carried their own team.Alternative: "Relative Dominance"2. Pts_XFactor $\rightarrow$ "Match-Winner Score"Why: Since this combines Strike Rate, Centuries, and Man of the Match awards, it represents the player's ability to change a game quickly and "clutch" the win.Alternative: "Game Changer Index"3. Pts_Consistency $\rightarrow$ "Bowling Quality Resistance"Why: This rewards players for scoring specifically against the highest-rated bowling attacks. It shows they didn't just "stat-pad" against weak teams.Alternative: "Elite Attack Score"4. Pts_Career $\rightarrow$ "Longevity & Volume"Why: This is based on total Runs. It represents the "Marathon" aspect of their career.Alternative: "Run Accumulation"5. Pts_Rating $\rightarrow$ "Peak Dominance"Why: This uses the ICC Rating. It represents the moment in time when that player was the undisputed #1 in the world.Alternative: "Historical Peak"6. Pts_PeakImpact $\rightarrow$ "Situational Value"Why: This uses your IPV_Raw (Impact Profile Value). It’s about the quality of the innings in the context of the match.Alternative: "Pressure Performance"
+
+
+
 <img width="768" height="429" alt="image" src="https://github.com/user-attachments/assets/c513fb1c-bf37-452a-a844-1cb06f12805f" />
 
 
