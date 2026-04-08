@@ -1,134 +1,90 @@
-Data Engineering Flow:
+# The Modern Test GOAT Index (1970 – Present)
+**An Advanced Statistical Framework for Evaluating Cricket Batting Excellence**
 
-Extraction: Raw historical cricket data harvested into Google Sheets.
+## Project Overview
+This project moves beyond the traditional "Batting Average" to identify the true immortals of modern Test Cricket. By applying a weighted 100-point system across six performance pillars, the model normalizes for era-specific difficulty, quality of bowling faced, and situational pressure.
 
-Transformation: Python/Pandas scripts in Google Colab used for cleaning, handling nulls, and initial feature engineering.
-
-Loading: Data pushed via the google-cloud-bigquery library into BigQuery for high-performance SQL analysis.
-
-Modeling: Final "Master" tables created in SQL using CTEs and normalization to feed Looker Studio.
-
-Data Dictionary
-
-Core Dimensions (The "Who & When")
-Player / Country: The primary identifiers for the athlete and their national team.
-
-Career: The total span of the player's active years (e.g., 1990-2006).
-
-Career_Start / Career_End: Integer values extracted from the career span, used for timeline analysis and cohort grouping.
-
-Era: Categorical classification based on debut year (e.g., '90s', '10s') to compare players across different technological and pitch-condition epochs.
-
-Longevity_Tier: A qualitative bucket (Short Peak to Iron Man) based on the total number of years active.
-
-Batting_Style: An "Intent Index" that categorizes players (Aggressor to Blocker) based on their career Strike Rate.
-
-Primary Metrics (The "Raw Data")
-Runs / Average / Rating: Traditional performance metrics including total volume, per-innings consistency, and normalized performance ratings.
-
-Strike_Rate: Scoring speed; used to differentiate between anchors and accelerators.
-
-Century_Frequency: The number of innings played per century scored (lower is better).
-
-MOM (Man of the Match): Total count of match-winning individual performances.
-
-WinsR / WinsS: Win-specific metrics; Win-Run percentage (Runs in wins / Total runs) and Strike Rate during winning matches.
-
-Team_Runs: The total runs scored by the player's team during their career; used to calculate relative contribution.
-
-Advanced Calculations (The "Analysis")
-wba_raw: Weighted Batting Average; a combined metric looking at a player's performance relative to both their teammates and their opposition.
-
-Cons_Raw: A consistency coefficient that penalizes high variance and rewards steady output.
-
-Bow_Q_Raw: A "Bowling Quality" factor that adjusts a player's score based on the strength of the bowling attacks faced in their specific era.
-
-IPV_Raw: Independent Player Value; a "Peak Impact" metric isolating a player's performance from team context during their best years.
-
-The Final Output
-Final_GOAT_Score: A composite, weighted index (0-100) that aggregates Longevity, Peak Impact, Consistency, and X-Factor. This is the primary sorting metric for the leaderboard.
-
-The GOAT Index: 100-Point Distribution
-To identify the greatest of all time, the model aggregates performance across six core "Pillars." Each pillar is normalized against the all-time statistical leader in that category to ensure a fair 0–100 scale.
-
-1. Longevity & Volume (12.5% / 12.5 Pts)
-Metric: Career Total Runs.
-
-Logic: Recognizes the "Iron Men" of the game. While runs aren't everything, the ability to maintain world-class form over 10,000+ runs is a mandatory requirement for GOAT status.
-
-2. Consistent Dominance (10% / 10 Pts)
-Metric: ICC/Standardized Performance Rating.
-
-Logic: Uses historical ratings to reward players who maintained the "World #1" or "Elite" status for the longest periods during their active years.
-
-3. The X-Factor (20% / 20 Pts)
-Metric: Combined Strike Rate, Century Frequency, and Man of the Match (MOM) Awards.
-
-Logic: This separates "Accumulators" from "Match Winners." It rewards players who score fast, score big centuries often, and are the primary reason their team wins individual matches.
-
-4. Weighted Batting Achievement - WBA (32.5% / 32.5 Pts)
-Metric: Average Relative to Team + Average Relative to Opposition.
-
-Logic: The "Hero" Metric. This is the heaviest weight in the model. It asks: "How much better were you than your teammates and the era you played in?" This ensures a player who averaged 50 on "minefield" pitches in the 90s is valued more than one who averaged 50 on "flat tracks" in the 2010s.
-
-5. Reliability & Quality (15% / 15 Pts)
-Metric: Consistency Raw + Bowling Quality Raw.
-
-Logic: Rewards players who performed consistently against high-quality bowling attacks. It penalizes "stat-padding" against weak opposition and rewards those who stood up against the best in the world.
-
-6. Peak Impact Value - IPV (10% / 10 Pts)
-Metric: Independent Player Value (IPV).
-
-Logic: Measures a player's "Peak" (their best 3–5 year window) to ensure that legends with shorter but legendary peaks (like Don Bradman or Viv Richards) aren't buried by those who simply played longer.
-
-# The Math Behind the Ranking
-
-To ensure a fair comparison across different eras and playing styles, every player’s raw statistics are converted into a **Weighted Pillar Score**. We use a **Max-Ratio Normalization** formula, which benchmarks every player against the "Gold Standard" (the all-time statistical leader) in each specific category.
-
-### **The Core Formula**
-
-This formula ensures that the "Best in Class" for any category receives 100% of the available points for that pillar, with all other players ranked proportionally behind them:
-
-$$Score = \left( \frac{Player\ Metric}{Max\ Global\ Metric} \right) \times Pillar\ Weight$$
+The final output is a tiered classification system where a score of **80+** denotes "Immortal" status—a feat achieved by fewer than 0.1% of all professional cricketers.
 
 ---
 
-### **Calculation Examples**
+## Data Pipeline & Architecture
 
-To see how this works in practice, here are three examples of how points are awarded across different pillars:
-
-#### **1. Longevity & Volume (Weight: 12.5 Pts)**
-* **The Benchmark (Max):** Sachin Tendulkar (~15,921 runs)
-* **Player Example:** Brian Lara (~11,953 runs)
-* **The Math:** `(11,953 / 15,921) * 12.5`
-* **Points Awarded:** **9.38 / 12.5**
-
-#### **2. The X-Factor (Weight: 20 Pts)**
-* **The Benchmark (Max):** A theoretical top score of **85.0** (combined Strike Rate + Centuries + MOM).
-* **Player Example:** A modern aggressive batsman with a combined score of **72.0**.
-* **The Math:** `(72.0 / 85.0) * 20`
-* **Points Awarded:** **16.94 / 20**
-* *Insight: This allows high-impact modern players to remain competitive with high-volume legends.*
-
-#### **3. Weighted Batting Achievement - WBA (Weight: 32.5 Pts)**
-* **The Benchmark (Max):** The highest "Era-Adjusted" score in the database (e.g., **2.8**).
-* **Player Example:** A player with a WBA raw score of **2.1** (indicating they were significantly better than their peers).
-* **The Math:** `(2.1 / 2.8) * 32.5`
-* **Points Awarded:** **24.37 / 32.5**
+* **Ingestion:** Raw career and match metrics gathered via **Google Sheets**.
+* **Processing:** Data cleaning, player normalization, and feature engineering performed in **Google Colab (Python)**.
+* **Data Warehouse:** Cleaned data hosted in **Google BigQuery** for high-speed SQL aggregations and Z-Score calculations.
+* **Visualization:** Dynamic reporting and scatter plot analysis built in **Looker Studio**.
 
 ---
 
-### **Dynamic Benchmarking**
-The "Max Global Metric" is not a fixed number; it is dynamically identified by the SQL script from the current dataset. As active players like Joe Root or Virat Kohli increase their career totals or improve their averages, the benchmarks adjust, ensuring the **Final GOAT Score** is always a reflection of the total history of the game.
+## Dimensions & Metrics Reference
 
-Since your GOAT score is a 100-point "Evaluation," I recommend using these "Fan-Friendly" labels for your charts and tables:1. Pts_WBA $\rightarrow$ "Opposition & Team Impact"Why: This is your heaviest metric (32.5 pts). It measures how much better a player was than the specific bowlers they faced and how much they carried their own team.Alternative: "Relative Dominance"2. Pts_XFactor $\rightarrow$ "Match-Winner Score"Why: Since this combines Strike Rate, Centuries, and Man of the Match awards, it represents the player's ability to change a game quickly and "clutch" the win.Alternative: "Game Changer Index"3. Pts_Consistency $\rightarrow$ "Bowling Quality Resistance"Why: This rewards players for scoring specifically against the highest-rated bowling attacks. It shows they didn't just "stat-pad" against weak teams.Alternative: "Elite Attack Score"4. Pts_Career $\rightarrow$ "Longevity & Volume"Why: This is based on total Runs. It represents the "Marathon" aspect of their career.Alternative: "Run Accumulation"5. Pts_Rating $\rightarrow$ "Peak Dominance"Why: This uses the ICC Rating. It represents the moment in time when that player was the undisputed #1 in the world.Alternative: "Historical Peak"6. Pts_PeakImpact $\rightarrow$ "Situational Value"Why: This uses your IPV_Raw (Impact Profile Value). It’s about the quality of the innings in the context of the match.Alternative: "Pressure Performance"
+### Core Dimensions
+* **Player:** The unique identifier for each batsman in the dataset.
+* **Country:** The international team represented by the player.
+* **Era (Decade):** The specific time period used to calculate relative Z-Scores (e.g., 1990s, 2000s).
+* **Span:** The start and end years of the player's international career.
 
+### Performance Metrics
+* **Mat / Inns:** Total matches played and innings batted.
+* **Runs:** Total career runs scored in Test Cricket.
+* **Ave:** The traditional batting average (Runs / Dismissals).
+* **SR (Strike Rate):** The number of runs scored per 100 balls faced.
+* **100s / 50s:** The frequency of centuries and half-centuries scored.
+* **MOM Awards:** Total "Player of the Match" accolades received.
+* **WBA (Weighted Batting Avg):** Average adjusted for opposition strength and team run contribution.
+* **X-Factor Score:** A composite metric measuring scoring speed and match-winning impact.
+* **Era Dominance (Z-Score):** The number of standard deviations a player sits above their decade's mean.
+* **Consistency Rating:** Performance frequency against ICC Top-5 ranked bowling attacks.
+* **Impact Profile (IPV):** A weighted score for 4th innings, series-deciders, and high-pressure chases.
+* **Bowling Quality Resistance:** A metric measuring runs scored specifically against elite individual bowlers.
 
+---
 
-<img width="768" height="429" alt="image" src="https://github.com/user-attachments/assets/c513fb1c-bf37-452a-a844-1cb06f12805f" />
+## The 100-Point Methodology (Calculations)
 
+To ensure statistical parity, every pillar is relativized against the modern era's "Gold Standard" (the highest recorded value since 1970).
 
+### 1. Opposition & Team Impact (35.0 Pts)
+* **Formula:** `(Player_WBA / Max_Modern_WBA) * 35.0`
+* **Goal:** Rewards players who "carried" their teams against strong opposition.
 
+### 2. Match-Winner Score (25.0 Pts)
+* **Formula:** `((Strike_Rate * 0.1) + (MOM_Awards * 2) / Max_XFactor) * 25.0`
+* **Goal:** Rewards aggression and the ability to fundamentally alter match outcomes.
 
+### 3. Elite Attack Resistance (20.0 Pts)
+* **Formula:** `(Resistance_Score / Max_Resistance) * 20.0`
+* **Goal:** Filters out "cheap runs" by prioritizing runs scored against top-tier bowling.
 
+### 4. Situational Pressure Value (10.0 Pts)
+* **Formula:** `(IPV_Score / Max_IPV) * 10.0`
+* **Goal:** Rewards "Clutch" performances in 4th innings or series-defining moments.
 
+### 5. Era Dominance (5.0 Pts)
+* **Formula:** `(Era_ZScore / Max_ZScore) * 5.0`
+* **Goal:** A prestige bonus for players who gapped their contemporaries by the widest margins.
+
+### 6. Longevity & Volume (5.0 Pts)
+* **Formula:** `(Total_Runs / 15921) * 5.0`
+* **Goal:** A "marathon" reward for maintaining elite standards over a long career.
+
+---
+
+## Tiered Classification System
+
+Players are mapped into tiers based on their **Final GOAT Score**:
+
+* **The Immortal Tier (80.0+):** Outliers who dominated across all six pillars (e.g., Sangakkara, Lara, Smith).
+* **The Elite Benchmark (70.0 - 79.9):** Hall of Fame legends with sustained world-class impact (e.g., Ponting, Kallis).
+* **The Great Tier (<70.0):** Elite professionals who defined their era but lacked the statistical "Peak" of the top tiers.
+
+---
+
+## Limitations
+* **Bowling Quality:** While Z-Scores normalize for era-means, they cannot fully capture the "fear factor" of specific batteries like the 90s West Indies pace attack.
+* **Series Leverage:** Current logic weights match-winning innings equally; future iterations (v3.0) will include multipliers for series-clinching performances.
+
+---
+**Author:** Dipesh Shah  
+**Tools:** SQL (BigQuery), Python (Colab), Looker Studio
