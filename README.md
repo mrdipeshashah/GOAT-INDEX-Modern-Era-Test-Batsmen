@@ -46,7 +46,7 @@ Summary of the core dimensions and metrics:
 
 ---
 
-## The 100-Point Methodology (Calculations)
+## THE 100 POINT METHODOLOGY + CALCULATIONS
 
 To ensure statistical parity, every pillar is relativized against the modern era's "Gold Standard" (the highest recorded value since 1970).
 
