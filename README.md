@@ -20,6 +20,8 @@ Using a weighted 100-point system across six performance pillars, the model norm
 
 ## DIMENSIONS & METRICS REFERENCE
 
+The master Big Query table had a total of 39 dimensions and metrics. 
+
 ### Core Dimensions
 * **Player:** The unique identifier for each batsman in the dataset.
 * **Country:** The international team represented by the player.
