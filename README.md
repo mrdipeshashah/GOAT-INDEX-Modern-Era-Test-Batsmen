@@ -2,7 +2,10 @@
 # The GOAT INDEX for Modern era test batsmen (from 1970 – to early 2026 incluidng the 5th Ashes test)
 **Moving away from averages, 100's scored by batsmen to evalualte test batting performance and who the GOAT batsmen are**
 
-## Project Overview
+## OVERVIEW
+Came across a twitter debate who was the greatest test batsmen. There were some varying opinions in the twitter debate and within the twitter thread there was some data shared saved in noptepad file in a dropbox folder. I decided let me do my own analysis and build out some visulisations
+to find out who are the GOAT test batsmen.  
+
 This project moves beyond the traditional "Batting Average" to identify the true immortals of modern Test Cricket. By applying a weighted 100-point system across six performance pillars, the model normalizes for era-specific difficulty, quality of bowling faced, and situational pressure.
 
 The final output is a tiered classification system where a score of **80+** denotes "Immortal" status—a feat achieved by fewer than 0.1% of all professional cricketers.
