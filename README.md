@@ -46,9 +46,9 @@ Summary of the core dimensions and metrics:
 
 ---
 
-## THE 100 POINT METHODOLOGY + CALCULATIONS
+## THE 100 POINT METHODOLOGY + CALCULATIONS = GOAT INDEX
 
-To ensure statistical parity, every pillar is relativized against the modern era's "Gold Standard" (the highest recorded value since 1970).
+The GOAT INDEX was calculated from 6 pillars and each pillar weighted to its importance = 100
 
 ### 1. Opposition & Team Impact (35.0 Pts)
 * **Formula:** `(Player_WBA / Max_Modern_WBA) * 35.0`
