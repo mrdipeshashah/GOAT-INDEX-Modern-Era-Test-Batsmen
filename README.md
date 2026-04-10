@@ -46,7 +46,7 @@ Summary of the core dimensions and metrics:
 
 ---
 
-## THE 100 POINT METHODOLOGY + CALCULATIONS = GOAT INDEX
+## THE 100 POINT MODEL + CALCULATIONS = GOAT INDEX
 
 The GOAT INDEX was calculated from 6 pillars and each pillar weighted to its importance = 100
 
@@ -73,6 +73,12 @@ The GOAT INDEX was calculated from 6 pillars and each pillar weighted to its imp
 ### 6. Longevity & Volume (5.0 Pts)
 * **Formula:** `(Total_Runs / 15921) * 5.0`
 * **Goal:** A "marathon" reward for maintaining elite standards over a long career.
+
+---
+
+## THE MODELS PHILOSOPHY - IMPACT OVER ACCUMULATION
+
+Most analysis on players will value longetivity, the model created focuses on the contributuon and the impact created 
 
 ---
 
