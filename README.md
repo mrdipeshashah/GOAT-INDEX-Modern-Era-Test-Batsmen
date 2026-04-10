@@ -82,7 +82,7 @@ Most analysis on players will value longetivity, the model created focuses on th
 
 ---
 
-## CASE STUDY - IMPACT V ACCUMULATION
+## CASE STUDY - IMPACT V ACCUMULATION - BEN STOKES V JACQUES KALLIS
 
 Comparing Ben Stokes and Jacques Kallis (the batsmen) looking at the batting average it shows a huge gulf between the two batsmen. The GOAT INDEX reduces the gap and credits Ben Stokes, but still Jacques Kallis is the greater batsmen of the two.
 
