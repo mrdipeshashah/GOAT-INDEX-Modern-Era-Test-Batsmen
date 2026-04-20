@@ -7,7 +7,7 @@ auth.authenticate_user()
 drive.mount('/content/drive', force_remount=True)
 
 # 2. CONFIGURATION
-PROJECT_ID = 'mrdipeshashah'
+PROJECT_ID = 'projectid'
 DATASET_ID = 'cricket_analysis'
 FOLDER_PATH = '/content/drive/MyDrive/Cricket_Analysis/' 
 
